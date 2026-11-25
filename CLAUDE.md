@@ -16,6 +16,13 @@ Stack: ASP.NET Core, PostgreSQL, EF Core (migracje), JWT, Docker Compose, testy 
 - Nazwy branchy: `feat/...`, `fix/...`, `chore/...`, `test/...`, `docs/...`, `ci/...`.
 - Każdy PR przed mergem przechodzi `/code-review` i `/security-review`.
 
+## Automatyzacja Claude Code (`.claude/`)
+- `hooks/block-push-main.sh` (PreToolUse, Bash): blokuje push na `main`/`master` i force push.
+- `hooks/build-after-edit.sh` (PostToolUse, Edit/Write): `dotnet build` po edycji pliku `.cs`/`.csproj`.
+- `hooks/run-tests-on-stop.sh` (Stop): `dotnet test` na koniec tury, gdy są niezacommitowane zmiany w kodzie. Wymaga działającego Dockera.
+- `settings.json`: lista tego, co wolno bez pytania (build, test, git status...), i tego, czego nie wolno nigdy (.env, force push, reset --hard, merge PR).
+- Własne ustawienia lokalne trzymaj w `.claude/settings.local.json` (nie trafia do gita).
+
 ## Architektura
 Zobacz `docs/adr/`. Najważniejsze:
 - ADR-0001: vertical slices w `ExpenseSplitter.Api`, czysta logika w `ExpenseSplitter.Domain` (bez zależności od EF Core i ASP.NET).
