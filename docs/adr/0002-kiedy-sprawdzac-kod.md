@@ -18,8 +18,8 @@ Wybieramy **opcję 2**, żeby praca szła jak najszybciej.
 Rekomendacją była opcja 3, ale na razie nie ma jeszcze testów Domain, więc obie działają tak samo. Wrócimy do tego w kroku z liczeniem pieniędzy (krok 6).
 
 ## Konsekwencje
-- `PostToolUse` (Edit|Write|MultiEdit) → `.claude/hooks/build-after-edit.sh`: `dotnet build` po edycji pliku `.cs`/`.csproj`.
-- `Stop` → `.claude/hooks/run-tests-on-stop.sh`: `dotnet test`, ale tylko gdy są niezacommitowane zmiany w kodzie. Dzięki temu zwykła odpowiedź na pytanie nie czeka 30 s.
-- Jeśli testy nie przejdą, Claude nie może zakończyć tury i dostaje błędy do naprawy. Druga nieudana próba już go puszcza (`stop_hook_active`), żeby nie było nieskończonej pętli.
+- `PostToolUse` (Edit|Write|MultiEdit) → `.claude/hooks/build-after-edit.sh`: `dotnet build` po edycji pliku `.cs`, `.csproj`, `.props`, `.targets`, `.sln` lub `.slnx`. Zostawia też znacznik „kod się zmienił” w pliku tymczasowym sesji.
+- `Stop` → `.claude/hooks/run-tests-on-stop.sh`: `dotnet test`, ale tylko gdy kod się zmienił (jest znacznik albo niezacommitowane pliki z tymi rozszerzeniami). Dzięki temu zwykła odpowiedź na pytanie nie czeka 30 s, a commit w trakcie tury nie omija testów.
+- Jeśli testy nie przejdą, Claude nie może zakończyć tury i dostaje błędy do naprawy. Każda kolejna próba jest testowana od nowa. Po 3 nieudanych próbach hook go puszcza (żeby nie było nieskończonej pętli) i pokazuje użytkownikowi ostrzeżenie.
 - Testy integracyjne wymagają działającego Docker Desktop.
 - Zmiana na opcję 3 to dopisanie `dotnet test tests/ExpenseSplitter.Domain.Tests` w `build-after-edit.sh`.
