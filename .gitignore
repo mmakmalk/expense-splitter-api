@@ -1,0 +1,36 @@
+# .NET build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userprefs
+
+# IDE
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# Test results / coverage
+TestResults/
+[Tt]est[Rr]esult*/
+coverage*.xml
+*.coverage
+*.trx
+
+# Secrets / local config
+.env
+*.env.local
+appsettings.*.local.json
+secrets.json
+
+# Claude Code local settings (shared settings.json IS committed)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
