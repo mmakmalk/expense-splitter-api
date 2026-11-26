@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- Framework, nullable etc. come from Directory.Build.props in the repo root. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\ExpenseSplitter.Domain\ExpenseSplitter.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

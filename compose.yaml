@@ -1,0 +1,36 @@
+# Local development: `docker compose up --build` starts the API and PostgreSQL.
+# Secrets come from .env (copy .env.example to .env). .env is never committed.
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: expense_splitter
+      POSTGRES_USER: ${POSTGRES_USER:-expense}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (copy .env.example)}
+    ports:
+      # Only reachable from this computer. Change POSTGRES_PORT in .env if 5432 is taken.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # Used from step 4 (database). Host "db" = the service above.
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=expense_splitter;Username=${POSTGRES_USER:-expense};Password=${POSTGRES_PASSWORD}"
+    ports:
+      # Change API_PORT in .env if 5080 is taken on this computer.
+      - "127.0.0.1:${API_PORT:-5080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
