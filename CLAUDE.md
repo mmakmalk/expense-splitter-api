@@ -29,6 +29,14 @@ Zobacz `docs/adr/`. Najważniejsze:
 - ADR-0001: vertical slices w `ExpenseSplitter.Api`, czysta logika w `ExpenseSplitter.Domain` (bez zależności od EF Core i ASP.NET).
 - ADR-0003: .NET 10. Wspólne ustawienia w `Directory.Build.props` (ostrzeżenia = błędy).
 - ADR-0004: Minimal APIs. Jeden endpoint = jeden plik w `Features/<Funkcja>/`. Bez MediatR.
+- ADR-0005: testy integracyjne z prawdziwym Postgresem (Testcontainers), jeden kontener na przebieg, czyszczenie bazy przez Respawn przed każdym testem.
+
+## Testy
+- Integracyjne: `tests/ExpenseSplitter.Api.IntegrationTests`. Nowa klasa testów:
+  `[Collection(ApiCollection.Name)] public class XTests(ApiFactory api) : IntegrationTest(api)`.
+  Masz wtedy `Client` (HttpClient do API) i czystą bazę na starcie każdego testu.
+- Nazwy testów opisują zachowanie: `Health_returns_200_Healthy`.
+- Wymagają działającego Docker Desktop.
 
 ## Komendy
 - Build: `dotnet build ExpenseSplitter.slnx`
