@@ -14,7 +14,7 @@ API do dzielenia wspólnych wydatków w grupie (np. na wyjeździe): kto zapłaci
 ```bash
 cp .env.example .env      # potem ustaw własne hasło w .env
 docker compose up --build
-curl http://localhost:8080/health   # → Healthy
+curl http://localhost:5080/health   # → Healthy
 ```
 
 ### Samo API, bez Dockera
