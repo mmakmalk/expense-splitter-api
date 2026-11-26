@@ -27,3 +27,11 @@ Stack: ASP.NET Core, PostgreSQL, EF Core (migracje), JWT, Docker Compose, testy 
 ## Architektura
 Zobacz `docs/adr/`. Najważniejsze:
 - ADR-0001: vertical slices w `ExpenseSplitter.Api`, czysta logika w `ExpenseSplitter.Domain` (bez zależności od EF Core i ASP.NET).
+- ADR-0003: .NET 10. Wspólne ustawienia w `Directory.Build.props` (ostrzeżenia = błędy).
+- ADR-0004: Minimal APIs. Jeden endpoint = jeden plik w `Features/<Funkcja>/`. Bez MediatR.
+
+## Komendy
+- Build: `dotnet build ExpenseSplitter.slnx`
+- Testy: `dotnet test ExpenseSplitter.slnx`
+- API + baza: `docker compose up --build` (wymaga `.env`, wzór w `.env.example`)
+- Health check: `GET /health`

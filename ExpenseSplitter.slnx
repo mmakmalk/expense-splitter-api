@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ExpenseSplitter.Api/ExpenseSplitter.Api.csproj" />
+    <Project Path="src/ExpenseSplitter.Domain/ExpenseSplitter.Domain.csproj" />
+  </Folder>
+</Solution>

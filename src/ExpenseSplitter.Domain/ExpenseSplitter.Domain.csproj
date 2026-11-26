@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Pure business logic: money, splitting, settlements (ADR-0001).
+    Must NOT reference EF Core, ASP.NET Core or any other project.
+  -->
+
+</Project>
