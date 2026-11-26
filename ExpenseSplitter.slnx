@@ -3,4 +3,7 @@
     <Project Path="src/ExpenseSplitter.Api/ExpenseSplitter.Api.csproj" />
     <Project Path="src/ExpenseSplitter.Domain/ExpenseSplitter.Domain.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ExpenseSplitter.Api.IntegrationTests/ExpenseSplitter.Api.IntegrationTests.csproj" />
+  </Folder>
 </Solution>
