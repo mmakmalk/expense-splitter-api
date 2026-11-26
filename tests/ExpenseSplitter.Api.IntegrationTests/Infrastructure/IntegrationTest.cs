@@ -22,5 +22,9 @@ public abstract class IntegrationTest(ApiFactory api) : IAsyncLifetime
 
     public Task InitializeAsync() => Api.ResetDatabaseAsync();
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public Task DisposeAsync()
+    {
+        Client.Dispose();
+        return Task.CompletedTask;
+    }
 }

@@ -7,15 +7,24 @@ namespace ExpenseSplitter.Api.IntegrationTests.Infrastructure;
 public class DatabaseResetTests(ApiFactory api) : IntegrationTest(api)
 {
     [Fact]
-    public async Task Reset_removes_all_rows_but_keeps_tables()
+    public async Task Reset_removes_all_rows_and_restarts_ids()
     {
-        await ExecuteAsync("CREATE TABLE IF NOT EXISTS reset_probe (id int PRIMARY KEY)");
-        await ExecuteAsync("INSERT INTO reset_probe VALUES (1), (2)");
-        Assert.Equal(2L, await ScalarAsync("SELECT count(*) FROM reset_probe"));
+        await ExecuteAsync("CREATE TABLE reset_probe (id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name text)");
+        try
+        {
+            await ExecuteAsync("INSERT INTO reset_probe (name) VALUES ('a'), ('b')");
+            Assert.Equal(2L, await ScalarAsync("SELECT count(*) FROM reset_probe"));
 
-        await Api.ResetDatabaseAsync();
+            await Api.ResetDatabaseAsync();
 
-        Assert.Equal(0L, await ScalarAsync("SELECT count(*) FROM reset_probe"));
+            Assert.Equal(0L, await ScalarAsync("SELECT count(*) FROM reset_probe"));
+            Assert.Equal(1, await ScalarAsync("INSERT INTO reset_probe (name) VALUES ('c') RETURNING id"));
+        }
+        finally
+        {
+            // The database is shared by all tests: leave no extra table behind.
+            await ExecuteAsync("DROP TABLE IF EXISTS reset_probe");
+        }
     }
 
     private async Task ExecuteAsync(string sql)

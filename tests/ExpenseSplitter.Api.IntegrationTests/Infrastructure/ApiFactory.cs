@@ -50,7 +50,26 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             TablesToIgnore = ["__EFMigrationsHistory"],
         });
 
+        // On Postgres this runs TRUNCATE ... CASCADE, which does not reset ID counters.
         await respawner.ResetAsync(connection);
+
+        // So restart every sequence too: the first row in each test gets id 1 again.
+        await using var restartSequences = new NpgsqlCommand(
+            """
+            DO $$
+            DECLARE s record;
+            BEGIN
+                -- pg_sequences (not information_schema) also lists sequences behind IDENTITY columns.
+                FOR s IN SELECT schemaname, sequencename
+                         FROM pg_sequences
+                         WHERE schemaname = 'public'
+                LOOP
+                    EXECUTE format('ALTER SEQUENCE %I.%I RESTART', s.schemaname, s.sequencename);
+                END LOOP;
+            END $$;
+            """,
+            connection);
+        await restartSequences.ExecuteNonQueryAsync();
     }
 
     private static async Task<bool> HasTablesToResetAsync(NpgsqlConnection connection)
@@ -69,7 +88,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     async Task IAsyncLifetime.DisposeAsync()
     {
-        await _db.DisposeAsync();
+        // Stop the API first (it may still hold DB connections), then remove the database.
         await base.DisposeAsync();
+        await _db.DisposeAsync();
     }
 }
