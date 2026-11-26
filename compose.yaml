@@ -9,7 +9,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-expense}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (copy .env.example)}
     ports:
-      - "127.0.0.1:5432:5432" # only reachable from this computer
+      # Only reachable from this computer. Change POSTGRES_PORT in .env if 5432 is taken.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - db-data:/var/lib/postgresql
     healthcheck:
